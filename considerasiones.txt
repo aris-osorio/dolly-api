@@ -1,0 +1,6 @@
+1.- cambiar links de los botones en correos/enviar.py por los enlaces del front end
+2.- en login retornar el token encriptado y desencriptar en el front end
+
+temp 1.- para agregar miembros a tablero  tablero.miembros.add(Usuario.objects.get(id= id))
+temp 2.- para remover miebros del tablero tablero.miembros.remove(Usuario.objects.get(id= id))
+
