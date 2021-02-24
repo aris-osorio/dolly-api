@@ -12,7 +12,7 @@ def enviar(html, para, titulo, correo):
     servidor.login('aris.bersain@gmail.com','@correo12345')
     mensaje = MIMEMultipart('alternative')
     mensaje['To'] = para
-    mensaje['From'] = email.utils.formataddr(('Aris Bersain','aris.bersain@gmail.com'))
+    mensaje['From'] = email.utils.formataddr(('Dolly','email-do-not-reply@dolly.com'))
     mensaje['Subject'] = titulo
     contenido = MIMEText(html, 'html')
     mensaje.attach(contenido)
@@ -83,5 +83,25 @@ class Enviar():
             <p/>'''.format(nombre=usuario["first_name"], id=usuario["id"], email1=email1,email=base64_email, key=base64_token) 
         para = email.utils.formataddr((usuario["first_name"], usuario["email"]))
         titulo = "Restablece tu contraseña de Dolly"
+        correo = usuario["email"]
+        enviar(html, para, titulo, correo)
+
+    def invitacion(usuario, nombre, tablero):
+        email1 = usuario["email"]
+        html = '''<h1>Hola {nombre}</h1>
+            <p>
+                {nombre1} te ha invitado a unirse al tablero '{tablero}' de Dolly: 
+                <br><br/> 
+            </p>
+            <form action="http://127.0.0.1:8000/" method="post" enctype="multipart/form-data">
+                <input type="submit" value="Ir a tablero" />
+            </form>
+            <p>
+                Saludos.
+                <br></br>
+                Equipo Dolly.
+            <p/>'''.format(nombre=usuario["first_name"], nombre1=nombre, tablero=tablero) 
+        para = email.utils.formataddr((usuario["first_name"], usuario["email"]))
+        titulo = nombre + " te ha invitado a unirse al tablero '"+ tablero +"'"
         correo = usuario["email"]
         enviar(html, para, titulo, correo)
