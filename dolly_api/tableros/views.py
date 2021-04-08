@@ -1,10 +1,13 @@
+from django.shortcuts import render
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from correos.enviar import Enviar
-from django.shortcuts import render
+from listas.models import Lista
+from listas.serializers import ListaSerializer
 from tableros.models import Tablero
 from tableros.serializers import TableroSerializer
 from usuarios.models import Usuario
@@ -65,6 +68,17 @@ class TablerosViewSet(viewsets.ModelViewSet):
             return Response("problem removing user to 'tablero'", status=status.HTTP_400_BAD_REQUEST)
 
         return Response("Removing user to 'tablero'", status=status.HTTP_200_OK)
+    
+    @action(methods = ['POST'], detail = True)
+    def cambiar_nombre(self, request, pk = None):
+        tablero = self.get_object()
+        try:
+            nombre = request.POST.get('nombre')
+            tablero.nombre = nombre
+            tablero.save()
+            return Response("Change name tablero", status=status.HTTP_201_CREATED)
+        except:
+            return Response("Error to change name tablero", status=status.HTTP_400_BAD_REQUEST)
         
     @action(methods = ['POST'], detail = True)
     def cambiar_favorito(self, request, pk = None):
@@ -97,3 +111,17 @@ class TablerosViewSet(viewsets.ModelViewSet):
         tablero.save()
         
         return Response("Visibility change successfully", status=status.HTTP_200_OK)
+
+    @action(methods = ['POST'], detail = True)
+    def agregar_lista(self, request, pk = None):
+        tablero = self.get_object()
+        lista = {
+            'nombre': request.POST.get('nombre'),
+            'tablero': tablero.id,
+            'posicion': request.POST.get('posicion'),
+        }
+        serializer = ListaSerializer(data=lista)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("List created", status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  

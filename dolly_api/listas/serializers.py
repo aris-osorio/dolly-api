@@ -4,4 +4,4 @@ from rest_framework import serializers
 class ListaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lista
-        fields = '__all__'
+        fields =  '__all__'
